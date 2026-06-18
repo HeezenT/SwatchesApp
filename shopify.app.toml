@@ -2,7 +2,7 @@
 
 client_id = "e57f651076deaf9a0464b4ab4e8bdea3"
 name = "Deryan Variant Swatches"
-application_url = "https://example.com"
+application_url = "https://deryan-variant-swatches-staging.onrender.com"
 embedded = true
 
 [build]
@@ -24,4 +24,8 @@ api_version = "2026-07"
 scopes = "read_products,write_products"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [
+  "https://deryan-variant-swatches-staging.onrender.com/auth/callback",
+  "https://deryan-variant-swatches-staging.onrender.com/auth/shopify/callback",
+  "https://deryan-variant-swatches-staging.onrender.com/api/auth/callback"
+]
