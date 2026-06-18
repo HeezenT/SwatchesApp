@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Note that some adapters may set a maximum length for the String type by default, please ensure your strings are long
+// enough when changing adapters.
+// See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id            String    @id
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+model SyncedProduct {
+  id          String   @id @default(cuid())
+  shop        String
+  productGid  String
+  handle      String
+  title       String
+  status      String
+  imageUrl    String?
+  optionsJson String   @default("[]")
+  variantsJson String  @default("[]")
+  syncedAt    DateTime @default(now())
+
+  @@unique([shop, productGid])
+  @@index([shop, handle])
+}
+
+model ProductGroup {
+  id          String         @id @default(cuid())
+  shop        String
+  title       String
+  type        String         @default("manual")
+  optionName  String
+  status      String         @default("synced")
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  products    GroupProduct[]
+
+  @@index([shop])
+}
+
+model GroupProduct {
+  id          String       @id @default(cuid())
+  groupId     String
+  productGid  String
+  handle      String
+  title       String
+  imageUrl    String?
+  optionValue String
+  color       String?
+  swatchType  String       @default("color")
+  sortOrder   Int          @default(0)
+  group       ProductGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, productGid])
+}
+
+model Swatch {
+  id        String   @id @default(cuid())
+  shop      String
+  name      String
+  type      String   @default("color")
+  color     String?
+  imageUrl  String?
+  usedIn    String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([shop, name])
+}
+
+model AppearanceSetting {
+  id          String   @id @default(cuid())
+  shop        String   @unique
+  accentColor String   @default("#ff7a2f")
+  borderColor String   @default("#d5dae2")
+  textColor   String   @default("#111111")
+  blockHeight Int      @default(108)
+  cornerRadius Int     @default(10)
+  updatedAt   DateTime @updatedAt
+}

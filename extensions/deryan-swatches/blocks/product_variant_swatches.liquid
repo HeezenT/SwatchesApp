@@ -1,0 +1,258 @@
+{%- liquid
+  assign product_resource = closest.product
+  assign configured_product = block.settings.product
+
+  if product_resource == blank
+    assign product_resource = product
+  endif
+
+  if configured_product != blank and configured_product.id != blank
+    assign product_resource = configured_product
+  endif
+
+  assign current_variant = product_resource.selected_or_first_available_variant
+  assign group_data = product_resource.metafields.deryan_swatches.group.value
+  assign block_uid = block.id | default: product_resource.id
+-%}
+
+{%- unless product_resource == blank -%}
+  {{ 'deryan-swatches.css' | asset_url | stylesheet_tag }}
+
+  <deryan-variant-swatches
+    class="deryan-swatches"
+    data-product-id="{{ product_resource.id }}"
+    data-product-url="{{ product_resource.url }}"
+    data-section-id="{{ section.id }}"
+    data-money-format="{{ shop.money_format | strip_html | escape }}"
+    data-currency="{{ cart.currency.iso_code | default: shop.currency }}"
+    data-hide-native-picker="{{ block.settings.hide_native_variant_picker }}"
+    style="
+      --deryan-swatches-accent: {{ block.settings.accent_color }};
+      --deryan-swatches-radius: {{ block.settings.corner_radius }}px;
+      --deryan-swatches-min-height: {{ block.settings.block_height }}px;
+    "
+    {{ block.shopify_attributes }}
+  >
+    {%- if group_data and group_data.products.size > 1 -%}
+      <fieldset
+        class="deryan-swatches__option deryan-swatches__option--color"
+        data-product-group
+      >
+        <legend class="deryan-swatches__legend">
+          <span class="deryan-swatches__option-name">{{ group_data.optionName | default: 'Kleur' | escape }}</span>
+          <span class="deryan-swatches__selected-value" data-selected-value>
+            {%- for grouped_product in group_data.products -%}
+              {%- if grouped_product.handle == product_resource.handle -%}
+                {{ grouped_product.value | escape }}
+              {%- endif -%}
+            {%- endfor -%}
+          </span>
+        </legend>
+
+        <div class="deryan-swatches__grid">
+          {%- for grouped_product in group_data.products -%}
+            {%- liquid
+              assign grouped_value = grouped_product.value | default: grouped_product.title
+              assign grouped_color = grouped_product.color | default: '#d8d8d8'
+              assign grouped_url = grouped_product.url
+              assign is_current_product = false
+
+              if grouped_url == blank
+                assign grouped_url = grouped_product.handle | prepend: '/products/'
+              endif
+
+              if grouped_product.handle == product_resource.handle
+                assign is_current_product = true
+              endif
+            -%}
+
+            <a
+              class="deryan-swatches__button{% if is_current_product %} deryan-swatches__button--active{% endif %}"
+              href="{{ grouped_url }}"
+              aria-current="{% if is_current_product %}true{% else %}false{% endif %}"
+              aria-label="{{ grouped_value | escape }}"
+            >
+              <span
+                class="deryan-swatches__swatch"
+                style="
+                  --deryan-swatch-background: {{ grouped_color }};
+                  --deryan-swatch-focal-point: center;
+                  --deryan-check-color: #ffffff;
+                "
+                aria-hidden="true"
+              ></span>
+              <span class="deryan-swatches__sr-only">{{ grouped_value | escape }}</span>
+            </a>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+    {%- elsif product_resource.has_only_default_variant == false -%}
+      {%- for product_option in product_resource.options_with_values -%}
+      {%- liquid
+        assign option_handle = product_option.name | handleize
+        assign swatch_count = product_option.values | map: 'swatch' | compact | size
+        assign is_color_option = false
+
+        if option_handle contains 'kleur' or option_handle contains 'color' or option_handle contains 'colour'
+          assign is_color_option = true
+        endif
+
+        if swatch_count > 0
+          assign is_color_option = true
+        endif
+      -%}
+
+      <fieldset
+        class="deryan-swatches__option{% if is_color_option %} deryan-swatches__option--color{% endif %}"
+        data-option-index="{{ product_option.position | minus: 1 }}"
+      >
+        <legend class="deryan-swatches__legend">
+          <span class="deryan-swatches__option-name">{{ product_option.name | escape }}</span>
+          <span class="deryan-swatches__selected-value" data-selected-value>{{ product_option.selected_value }}</span>
+        </legend>
+
+        <div class="deryan-swatches__grid">
+          {%- for product_option_value in product_option.values -%}
+            {%- liquid
+              assign input_id = 'DeryanSwatch-' | append: block_uid | append: '-' | append: product_option.position | append: '-' | append: forloop.index0
+              assign value_name = product_option_value.name | default: product_option_value
+              assign value_handle = value_name | handleize
+              assign swatch_background = '#d8d8d8'
+              assign swatch_focal_point = ''
+              assign swatch_check_color = '#ffffff'
+
+              if product_option_value.swatch.image
+                assign swatch_image_url = product_option_value.swatch.image | image_url: width: 120
+                assign swatch_background = 'url(' | append: swatch_image_url | append: ')'
+                assign swatch_focal_point = product_option_value.swatch.image.presentation.focal_point
+              elsif product_option_value.swatch.color
+                assign swatch_background = 'rgb(' | append: product_option_value.swatch.color.rgb | append: ')'
+              elsif is_color_option
+                case value_handle
+                  when 'zwart', 'black'
+                    assign swatch_background = '#111111'
+                  when 'wit', 'white'
+                    assign swatch_background = '#ffffff'
+                  when 'creme', 'cream', 'beige', 'zand', 'sand', 'taupe'
+                    assign swatch_background = '#e8ddcf'
+                  when 'grijs', 'gray', 'grey', 'lichtgrijs', 'light-grey', 'light-gray'
+                    assign swatch_background = '#c9c9c9'
+                  when 'donkergrijs', 'dark-grey', 'dark-gray'
+                    assign swatch_background = '#4b4b4b'
+                  when 'blauw', 'blue', 'navy', 'donkerblauw'
+                    assign swatch_background = '#2f5f9f'
+                  when 'groen', 'green'
+                    assign swatch_background = '#4f7d55'
+                  when 'roze', 'pink'
+                    assign swatch_background = '#e8a6b8'
+                  when 'rood', 'red'
+                    assign swatch_background = '#c83d35'
+                  when 'bruin', 'brown'
+                    assign swatch_background = '#7a523b'
+                endcase
+              endif
+
+              if value_handle == 'wit' or value_handle == 'white' or value_handle == 'creme' or value_handle == 'cream' or value_handle == 'beige' or value_handle == 'zand' or value_handle == 'sand'
+                assign swatch_check_color = '#111111'
+              endif
+            -%}
+
+            <input
+              class="deryan-swatches__input"
+              id="{{ input_id }}"
+              type="radio"
+              name="DeryanOption-{{ block_uid }}-{{ product_option.position }}"
+              value="{{ product_option_value | escape }}"
+              data-option-input
+              data-option-index="{{ product_option.position | minus: 1 }}"
+              data-option-value-id="{{ product_option_value.id }}"
+              data-variant-id="{{ product_option_value.variant.id }}"
+              data-option-available="{{ product_option_value.available }}"
+              aria-label="{{ product_option_value.name | escape }}{% unless product_option_value.available %} - {{ 'deryan_swatches.sold_out' | t }}{% endunless %}"
+              {% unless product_option_value.available %}aria-disabled="true"{% endunless %}
+              {% if product_option_value.selected %}checked{% endif %}
+            >
+
+            <label class="deryan-swatches__button" for="{{ input_id }}">
+              {%- if is_color_option -%}
+                <span
+                  class="deryan-swatches__swatch"
+                  style="
+                    --deryan-swatch-background: {{ swatch_background }};
+                    --deryan-swatch-focal-point: {{ swatch_focal_point | default: 'center' }};
+                    --deryan-check-color: {{ swatch_check_color }};
+                  "
+                  aria-hidden="true"
+                ></span>
+                <span class="deryan-swatches__sr-only">{{ product_option_value | escape }}</span>
+              {%- else -%}
+                <span class="deryan-swatches__text">{{ product_option_value | escape }}</span>
+              {%- endif -%}
+
+              <span class="deryan-swatches__strike" aria-hidden="true"></span>
+            </label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+      {%- endfor -%}
+
+      <script type="application/json" data-product-json>
+        {
+          "productId": {{ product_resource.id | json }},
+          "productUrl": {{ product_resource.url | json }},
+          "selectedVariantId": {{ current_variant.id | json }},
+          "variants": {{ product_resource.variants | json }}
+        }
+      </script>
+    {%- endif -%}
+  </deryan-variant-swatches>
+
+  <script src="{{ 'deryan-swatches.js' | asset_url }}" defer></script>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Deryan variant swatches",
+  "target": "section",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "autofill": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_native_variant_picker",
+      "label": "Hide theme variant picker",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Selected border color",
+      "default": "#ff7a2f"
+    },
+    {
+      "type": "range",
+      "id": "block_height",
+      "label": "Block height",
+      "min": 72,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "default": 108
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Corner radius",
+      "min": 4,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ]
+}
+{% endschema %}
