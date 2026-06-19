@@ -12,7 +12,23 @@
 
   assign current_variant = product_resource.selected_or_first_available_variant
   assign group_data = product_resource.metafields.deryan_swatches.group.value
+  assign app_appearance = shop.metafields.deryan_swatches.appearance.value
   assign block_uid = block.id | default: product_resource.id
+  assign accent_color = app_appearance.accentColor | default: block.settings.accent_color
+  assign border_color = app_appearance.borderColor | default: block.settings.border_color
+  assign active_background_color = app_appearance.activeBackgroundColor | default: block.settings.active_background_color
+  assign inactive_background_color = app_appearance.inactiveBackgroundColor | default: block.settings.inactive_background_color
+  assign text_color = app_appearance.textColor | default: block.settings.text_color
+  assign active_text_color = app_appearance.activeTextColor | default: block.settings.active_text_color
+  assign inactive_text_color = app_appearance.inactiveTextColor | default: block.settings.inactive_text_color
+  assign block_height = app_appearance.blockHeight | default: block.settings.block_height
+  assign corner_radius = app_appearance.cornerRadius | default: block.settings.corner_radius
+  assign header_font_size = app_appearance.headerFontSize | default: block.settings.header_font_size
+  assign value_font_size = app_appearance.valueFontSize | default: block.settings.value_font_size
+  assign button_font_size = app_appearance.buttonFontSize | default: block.settings.button_font_size
+  assign header_font_weight = app_appearance.headerFontWeight | default: block.settings.header_font_weight
+  assign value_font_weight = app_appearance.valueFontWeight | default: block.settings.value_font_weight
+  assign button_font_weight = app_appearance.buttonFontWeight | default: block.settings.button_font_weight
 -%}
 
 {%- unless product_resource == blank -%}
@@ -27,9 +43,21 @@
     data-currency="{{ cart.currency.iso_code | default: shop.currency }}"
     data-hide-native-picker="{{ block.settings.hide_native_variant_picker }}"
     style="
-      --deryan-swatches-accent: {{ block.settings.accent_color }};
-      --deryan-swatches-radius: {{ block.settings.corner_radius }}px;
-      --deryan-swatches-min-height: {{ block.settings.block_height }}px;
+      --deryan-swatches-accent: {{ accent_color }};
+      --deryan-swatches-border: {{ border_color }};
+      --deryan-swatches-active-bg: {{ active_background_color }};
+      --deryan-swatches-inactive-bg: {{ inactive_background_color }};
+      --deryan-swatches-text: {{ text_color }};
+      --deryan-swatches-active-text: {{ active_text_color }};
+      --deryan-swatches-inactive-text: {{ inactive_text_color }};
+      --deryan-swatches-radius: {{ corner_radius }}px;
+      --deryan-swatches-min-height: {{ block_height }}px;
+      --deryan-swatches-header-size: {{ header_font_size }}px;
+      --deryan-swatches-value-size: {{ value_font_size }}px;
+      --deryan-swatches-button-size: {{ button_font_size }}px;
+      --deryan-swatches-header-weight: {{ header_font_weight }};
+      --deryan-swatches-value-weight: {{ value_font_weight }};
+      --deryan-swatches-button-weight: {{ button_font_weight }};
     "
     {{ block.shopify_attributes }}
   >
@@ -37,15 +65,29 @@
       <fieldset
         class="deryan-swatches__option deryan-swatches__option--color"
         data-product-group
+        data-static-helper="{{ group_data.helperText | escape }}"
+        data-tooltip-text="{{ group_data.tooltipText | escape }}"
       >
         <legend class="deryan-swatches__legend">
-          <span class="deryan-swatches__option-name">{{ group_data.optionName | default: 'Kleur' | escape }}</span>
+          <span class="deryan-swatches__option-heading">
+            <span class="deryan-swatches__option-name">{{ group_data.optionName | default: 'Kleur' | escape }}</span>
+            {%- if group_data.tooltipText != blank -%}
+              <button class="deryan-swatches__info" type="button" aria-label="Meer informatie">
+                i
+                <span class="deryan-swatches__tooltip" role="tooltip">{{ group_data.tooltipText | escape }}</span>
+              </button>
+            {%- endif -%}
+          </span>
           <span class="deryan-swatches__selected-value" data-selected-value>
-            {%- for grouped_product in group_data.products -%}
-              {%- if grouped_product.handle == product_resource.handle -%}
-                {{ grouped_product.value | escape }}
-              {%- endif -%}
-            {%- endfor -%}
+            {%- if group_data.helperText != blank -%}
+              {{ group_data.helperText | escape }}
+            {%- else -%}
+              {%- for grouped_product in group_data.products -%}
+                {%- if grouped_product.handle == product_resource.handle -%}
+                  {{ grouped_product.value | escape }}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
           </span>
         </legend>
 
@@ -105,9 +147,12 @@
       <fieldset
         class="deryan-swatches__option{% if is_color_option %} deryan-swatches__option--color{% endif %}"
         data-option-index="{{ product_option.position | minus: 1 }}"
+        data-option-name="{{ product_option.name | escape }}"
       >
         <legend class="deryan-swatches__legend">
-          <span class="deryan-swatches__option-name">{{ product_option.name | escape }}</span>
+          <span class="deryan-swatches__option-heading">
+            <span class="deryan-swatches__option-name">{{ product_option.name | escape }}</span>
+          </span>
           <span class="deryan-swatches__selected-value" data-selected-value>{{ product_option.selected_value }}</span>
         </legend>
 
@@ -120,6 +165,7 @@
               assign swatch_background = '#d8d8d8'
               assign swatch_focal_point = ''
               assign swatch_check_color = '#ffffff'
+              assign variant_helper_text = product_option_value.variant.metafields.deryan_swatches.helper_text.value
 
               if product_option_value.swatch.image
                 assign swatch_image_url = product_option_value.swatch.image | image_url: width: 120
@@ -167,6 +213,7 @@
               data-option-index="{{ product_option.position | minus: 1 }}"
               data-option-value-id="{{ product_option_value.id }}"
               data-variant-id="{{ product_option_value.variant.id }}"
+              data-helper-text="{{ variant_helper_text | escape }}"
               data-option-available="{{ product_option_value.available }}"
               aria-label="{{ product_option_value.name | escape }}{% unless product_option_value.available %} - {{ 'deryan_swatches.sold_out' | t }}{% endunless %}"
               {% unless product_option_value.available %}aria-disabled="true"{% endunless %}
@@ -204,6 +251,9 @@
           "variants": {{ product_resource.variants | json }}
         }
       </script>
+
+      <script type="application/json" data-helper-map>{{ block.settings.helper_text_map | json }}</script>
+      <script type="application/json" data-tooltip-map>{{ block.settings.tooltip_text_map | json }}</script>
     {%- endif -%}
   </deryan-variant-swatches>
 
@@ -234,6 +284,42 @@
       "default": "#ff7a2f"
     },
     {
+      "type": "color",
+      "id": "border_color",
+      "label": "Inactive border color",
+      "default": "#d5dae2"
+    },
+    {
+      "type": "color",
+      "id": "active_background_color",
+      "label": "Selected background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "inactive_background_color",
+      "label": "Inactive background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Header text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "active_text_color",
+      "label": "Selected button text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "inactive_text_color",
+      "label": "Inactive button text color",
+      "default": "#111111"
+    },
+    {
       "type": "range",
       "id": "block_height",
       "label": "Block height",
@@ -252,6 +338,77 @@
       "step": 1,
       "unit": "px",
       "default": 10
+    },
+    {
+      "type": "range",
+      "id": "header_font_size",
+      "label": "Header font size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "value_font_size",
+      "label": "Right value font size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button font size",
+      "min": 13,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "header_font_weight",
+      "label": "Header font weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "value_font_weight",
+      "label": "Right value font weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "button_font_weight",
+      "label": "Button font weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "default": 700
+    },
+    {
+      "type": "textarea",
+      "id": "helper_text_map",
+      "label": "Helper text map",
+      "info": "One per line: Option name|Option value|Right-side helper text. Use * for any value.",
+      "default": ""
+    },
+    {
+      "type": "textarea",
+      "id": "tooltip_text_map",
+      "label": "Tooltip text map",
+      "info": "One per line: Option name|Tooltip text.",
+      "default": ""
     }
   ]
 }

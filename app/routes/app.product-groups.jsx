@@ -95,6 +95,14 @@ export default function ProductGroups() {
                 Storefront option label
                 <input name="optionName" defaultValue="Kleur" required />
               </label>
+              <label>
+                Right-side helper text
+                <input name="helperText" placeholder="Selected value, or type Bereik: tot 80km" />
+              </label>
+              <label>
+                Tooltip text
+                <input name="tooltipText" placeholder="Optional info shown from the i icon" />
+              </label>
             </div>
 
             <div className="ds-preset-reference">
@@ -186,6 +194,7 @@ export default function ProductGroups() {
                 <th>Title</th>
                 <th>Type</th>
                 <th>Option name</th>
+                <th>Helper</th>
                 <th>Products</th>
                 <th>Status</th>
                 <th></th>
@@ -206,6 +215,7 @@ export default function ProductGroups() {
                   </td>
                   <td>{group.type === "manual" ? "Manual" : "Automated"}</td>
                   <td>{group.optionName}</td>
+                  <td>{group.helperText || "Selected value"}</td>
                   <td>{group.products.length} products</td>
                   <td>
                     <span className="ds-status">Synced</span>
@@ -221,7 +231,7 @@ export default function ProductGroups() {
               ))}
               {groups.length === 0 ? (
                 <tr>
-                  <td colSpan="6">
+                  <td colSpan="7">
                     <div className="ds-empty">
                       No product links yet. Create your first link above.
                     </div>

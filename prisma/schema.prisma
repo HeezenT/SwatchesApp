@@ -55,6 +55,8 @@ model ProductGroup {
   title       String
   type        String         @default("manual")
   optionName  String
+  helperText  String?
+  tooltipText String?
   status      String         @default("synced")
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -94,12 +96,22 @@ model Swatch {
 }
 
 model AppearanceSetting {
-  id          String   @id @default(cuid())
-  shop        String   @unique
-  accentColor String   @default("#ff7a2f")
-  borderColor String   @default("#d5dae2")
-  textColor   String   @default("#111111")
-  blockHeight Int      @default(108)
-  cornerRadius Int     @default(10)
-  updatedAt   DateTime @updatedAt
+  id                      String   @id @default(cuid())
+  shop                    String   @unique
+  accentColor             String   @default("#ff7a2f")
+  borderColor             String   @default("#d5dae2")
+  activeBackgroundColor   String   @default("#ffffff")
+  inactiveBackgroundColor String   @default("#ffffff")
+  textColor               String   @default("#111111")
+  activeTextColor         String   @default("#111111")
+  inactiveTextColor       String   @default("#111111")
+  blockHeight             Int      @default(108)
+  cornerRadius            Int      @default(10)
+  headerFontSize          Int      @default(22)
+  valueFontSize           Int      @default(22)
+  buttonFontSize          Int      @default(20)
+  headerFontWeight        Int      @default(800)
+  valueFontWeight         Int      @default(800)
+  buttonFontWeight        Int      @default(700)
+  updatedAt               DateTime @updatedAt
 }

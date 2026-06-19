@@ -124,6 +124,8 @@ export async function getAppearance(shop) {
 export async function createGroupFromForm(admin, shop, formData) {
   const title = String(formData.get("title") || "").trim();
   const optionName = String(formData.get("optionName") || "Kleur").trim();
+  const helperText = String(formData.get("helperText") || "").trim();
+  const tooltipText = String(formData.get("tooltipText") || "").trim();
   const selectedProductGids = formData.getAll("productGid").map(String);
   const productLines = String(formData.get("products") || "")
     .split("\n")
@@ -178,6 +180,8 @@ export async function createGroupFromForm(admin, shop, formData) {
       shop,
       title,
       optionName,
+      helperText: helperText || null,
+      tooltipText: tooltipText || null,
       type: "manual",
       products: {
         create: groupProducts,
@@ -242,9 +246,19 @@ export async function publishAppearanceMetafield(admin, appearance) {
       value: JSON.stringify({
         accentColor: appearance.accentColor,
         borderColor: appearance.borderColor,
+        activeBackgroundColor: appearance.activeBackgroundColor,
+        inactiveBackgroundColor: appearance.inactiveBackgroundColor,
         textColor: appearance.textColor,
+        activeTextColor: appearance.activeTextColor,
+        inactiveTextColor: appearance.inactiveTextColor,
         blockHeight: appearance.blockHeight,
         cornerRadius: appearance.cornerRadius,
+        headerFontSize: appearance.headerFontSize,
+        valueFontSize: appearance.valueFontSize,
+        buttonFontSize: appearance.buttonFontSize,
+        headerFontWeight: appearance.headerFontWeight,
+        valueFontWeight: appearance.valueFontWeight,
+        buttonFontWeight: appearance.buttonFontWeight,
       }),
     },
   ]);
@@ -273,6 +287,8 @@ async function publishGroupMetafields(admin, group) {
         id: group.id,
         title: group.title,
         optionName: group.optionName,
+        helperText: group.helperText,
+        tooltipText: group.tooltipText,
         products,
       }),
     })),
@@ -362,8 +378,18 @@ function appearanceFromForm(shop, formData) {
     shop,
     accentColor: String(formData.get("accentColor") || "#ff7a2f"),
     borderColor: String(formData.get("borderColor") || "#d5dae2"),
+    activeBackgroundColor: String(formData.get("activeBackgroundColor") || "#ffffff"),
+    inactiveBackgroundColor: String(formData.get("inactiveBackgroundColor") || "#ffffff"),
     textColor: String(formData.get("textColor") || "#111111"),
+    activeTextColor: String(formData.get("activeTextColor") || "#111111"),
+    inactiveTextColor: String(formData.get("inactiveTextColor") || "#111111"),
     blockHeight: Number(formData.get("blockHeight") || 108),
     cornerRadius: Number(formData.get("cornerRadius") || 10),
+    headerFontSize: Number(formData.get("headerFontSize") || 22),
+    valueFontSize: Number(formData.get("valueFontSize") || 22),
+    buttonFontSize: Number(formData.get("buttonFontSize") || 20),
+    headerFontWeight: Number(formData.get("headerFontWeight") || 800),
+    valueFontWeight: Number(formData.get("valueFontWeight") || 800),
+    buttonFontWeight: Number(formData.get("buttonFontWeight") || 700),
   };
 }
