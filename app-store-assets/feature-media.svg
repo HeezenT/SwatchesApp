@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#f7f6f3"/>
+  <rect x="88" y="76" width="1424" height="748" rx="34" fill="#fff" stroke="#e1ded8"/>
+  <text x="142" y="170" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700" fill="#1f1f1f">Deryan Variant Swatches</text>
+  <text x="142" y="225" font-family="Arial, Helvetica, sans-serif" font-size="27" fill="#5e5a54">Premium storefront selectors for color, size, and product groups.</text>
+  <rect x="142" y="292" width="588" height="430" rx="20" fill="#f3f3f1"/>
+  <rect x="190" y="344" width="492" height="326" rx="18" fill="#fff" stroke="#ebe7df"/>
+  <rect x="238" y="404" width="398" height="34" rx="17" fill="#dad5cb"/>
+  <rect x="238" y="464" width="328" height="28" rx="14" fill="#eeeae3"/>
+  <rect x="238" y="522" width="374" height="28" rx="14" fill="#eeeae3"/>
+  <rect x="238" y="582" width="248" height="28" rx="14" fill="#eeeae3"/>
+  <rect x="812" y="292" width="546" height="430" rx="20" fill="#fff" stroke="#dedbd5"/>
+  <line x1="860" y1="384" x2="1310" y2="384" stroke="#dedbd5" stroke-width="2"/>
+  <text x="860" y="350" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#111">Kleur</text>
+  <text x="1248" y="350" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#111">Zwart</text>
+  <rect x="860" y="414" width="210" height="104" rx="14" fill="#fff" stroke="#ff8a3d" stroke-width="3"/>
+  <circle cx="965" cy="466" r="34" fill="#323232"/>
+  <path d="M950 465l11 11 24-26" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="1100" y="414" width="210" height="104" rx="14" fill="#fff" stroke="#d7d9dd" stroke-width="3"/>
+  <circle cx="1205" cy="466" r="34" fill="#d6d6d3" stroke="#c3c3c0" stroke-width="3"/>
+  <text x="860" y="572" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#111">Maat</text>
+  <text x="1116" y="572" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#111">Voor fietsers 155-195 cm</text>
+  <rect x="860" y="604" width="210" height="88" rx="14" fill="#fff" stroke="#ff8a3d" stroke-width="3"/>
+  <text x="922" y="660" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#111">56cm</text>
+  <rect x="1100" y="604" width="210" height="88" rx="14" fill="#fff" stroke="#d7d9dd" stroke-width="3"/>
+  <text x="1162" y="660" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#111">60cm</text>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#f4f4f2"/>
+  <text x="132" y="86" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" fill="#2d2d2d">Appearance</text>
+  <rect x="132" y="130" width="1336" height="646" rx="18" fill="#fff" stroke="#dadada"/>
+  <text x="180" y="194" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#222">Storefront style</text>
+  <text x="180" y="238" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#666">Customize the premium block swatch design without editing code.</text>
+  <rect x="180" y="300" width="500" height="82" rx="12" fill="#fafafa" stroke="#dedede"/>
+  <text x="210" y="350" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#222">Active border color</text>
+  <circle cx="620" cy="341" r="24" fill="#ff8a3d"/>
+  <rect x="180" y="410" width="500" height="82" rx="12" fill="#fafafa" stroke="#dedede"/>
+  <text x="210" y="460" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#222">Inactive border color</text>
+  <circle cx="620" cy="451" r="24" fill="#d2d6dc"/>
+  <rect x="180" y="520" width="500" height="82" rx="12" fill="#fafafa" stroke="#dedede"/>
+  <text x="210" y="570" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#222">Border radius</text>
+  <rect x="536" y="546" width="96" height="16" rx="8" fill="#2f2f2f"/>
+  <rect x="760" y="300" width="610" height="330" rx="18" fill="#f8f8f7" stroke="#dedede"/>
+  <text x="812" y="360" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#111">Kleur</text>
+  <text x="1262" y="360" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#111">Zwart</text>
+  <rect x="812" y="392" width="240" height="108" rx="14" fill="#fff" stroke="#ff8a3d" stroke-width="3"/>
+  <circle cx="932" cy="446" r="33" fill="#303030"/>
+  <path d="M918 445l11 11 24-26" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="1082" y="392" width="240" height="108" rx="14" fill="#fff" stroke="#d2d6dc" stroke-width="3"/>
+  <circle cx="1202" cy="446" r="33" fill="#d6d6d3" stroke="#c4c4c1" stroke-width="3"/>
+  <text x="812" y="570" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#111">Maat</text>
+  <text x="1094" y="570" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#111">Voor fietsers 155-195 cm</text>
+</svg>
